@@ -8,8 +8,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     //Cria o trem com seu (ID, posição X, posição Y)
-    trem1 = new Trem(1,60,30);
-    trem2 = new Trem(2,330,30);
+    trem1 = new Trem(1,140,30);
+    trem2 = new Trem(2,270,30);
+    trem3 = new Trem(3,400,30);
+    trem4 = new Trem(4,200,150);
+    trem5 = new Trem(5,330,150);
 
     /*
      * Conecta o sinal UPDATEGUI à função UPDATEINTERFACE.
@@ -20,36 +23,38 @@ MainWindow::MainWindow(QWidget *parent) :
      */
     connect(trem1,SIGNAL(updateGUI(int,int,int)),SLOT(updateInterface(int,int,int)));
     connect(trem2,SIGNAL(updateGUI(int,int,int)),SLOT(updateInterface(int,int,int)));
+    connect(trem3,SIGNAL(updateGUI(int,int,int)),SLOT(updateInterface(int,int,int)));
+    connect(trem4,SIGNAL(updateGUI(int,int,int)),SLOT(updateInterface(int,int,int)));
+    connect(trem5,SIGNAL(updateGUI(int,int,int)),SLOT(updateInterface(int,int,int)));
 
-
+    trem1->start();
+    trem2->start();
+    trem3->start();
+    trem4->start();
+    trem5->start();
 
 }
 
 //Função que será executada quando o sinal UPDATEGUI for emitido
 void MainWindow::updateInterface(int id, int x, int y){
     switch(id){
-    case 1:     //Trem 1
-            if (y == 30 && x <330)
-                x+=10;
-            else if (x == 330 && y < 150)
-                y+=10;
-            else if (x > 60 && y == 150)
-                x-=10;
-            else
-                y-=10;
-            emit updateGUI(ID, x,y);    //Emite um sinal
-            break;
-        case 2: //Trem 2
-            if (y == 30 && x <600)
-                x+=10;
-            else if (x == 600 && y < 150)
-                y+=10;
-            else if (x > 330 && y == 150)
-                x-=10;
-            else
-                y-=10;
-            emit updateGUI(ID, x,y);    //Emite um sinal
-            break;
+    case 1: //Atualiza a posição do objeto da tela (quadrado) que representa o trem1
+        ui->trem1->setGeometry(x,y,21,17);
+        break;
+    case 2: //Atualiza a posição do objeto da tela (quadrado) que representa o trem2
+        ui->trem2->setGeometry(x,y,21,17);
+        break;
+    case 3: //Atualiza a posição do objeto da tela (quadrado) que representa o trem2
+        ui->trem3->setGeometry(x,y,21,17);
+        break;
+    case 4: //Atualiza a posição do objeto da tela (quadrado) que representa o trem2
+        ui->trem4->setGeometry(x,y,21,17);
+        break;
+    case 5: //Atualiza a posição do objeto da tela (quadrado) que representa o trem2
+        ui->trem5->setGeometry(x,y,21,17);
+        break;
+    default:
+        break;
     }
 }
 
@@ -58,37 +63,28 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-/*
- * Ao clicar, trens começam execução
- */
-void MainWindow::on_pushButton_clicked()
+
+void MainWindow::on_horizontalSlider_sliderMoved(int position)
 {
-    trem1->start();
-    trem2->start();
+    trem1->setVelocidade(position);
 }
 
-/*
- * Ao clicar, trens param execução
- */
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::on_horizontalSlider_2_sliderMoved(int position)
 {
-    trem1->terminate();
-    trem2->terminate();
+    trem2->setVelocidade(position);
 }
 
-void MainWindow::on_velocidadeTrem1_rangeChanged(int min, int max)
+void MainWindow::on_horizontalSlider_3_sliderMoved(int position)
 {
-    // recupera o valor atual do controle deslizante
-    int nova_velocidade = ui->velocidadeTrem1->value();
-
-    // atualiza a velocidade do trem 1 com o novo valor
-    trem1.atualiza_velocidade(nova_velocidade);
-
-    // verifica se o trem deve parar
-    if (nova_velocidade == 0) {
-        trem1.para();
-    }
+    trem3->setVelocidade(position);
 }
 
+void MainWindow::on_horizontalSlider_4_sliderMoved(int position)
+{
+    trem4->setVelocidade(position);
+}
 
-
+void MainWindow::on_horizontalSlider_5_sliderMoved(int position)
+{
+    trem5->setVelocidade(position);
+}
